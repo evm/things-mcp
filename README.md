@@ -1,6 +1,6 @@
 # Things MCP Server
 
-This [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server lets you use Claude Desktop to interact with your task management data in [Things 3](https://culturedcode.com/things) from Cultured Code. You can ask Claude to create tasks, analyze projects, help manage priorities, and more.
+This [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server lets you use MCP clients such as Codex and Claude to interact with your task management data in [Things 3](https://culturedcode.com/things) from Cultured Code. You can create tasks, analyze projects, help manage priorities, and more.
 
 This server leverages the [Things.py](https://github.com/thingsapi/things.py) library and the [Things URL Scheme](https://culturedcode.com/things/help/url-scheme/). 
 
@@ -29,7 +29,7 @@ If you find this project helpful, consider supporting its development:
 ### Prerequisites
 - macOS (Things 3 is Mac-only)
 - Things 3 app with "Enable Things URLs" turned on (Settings → General)
-- A MCP client, such as Claude Desktop or Claude Code
+- An MCP client, such as Codex or Claude
 - [uv](https://docs.astral.sh/uv/) Python package manager: `brew install uv`
 
 ### Install via uvx (Any MCP Client)
@@ -41,6 +41,43 @@ uvx things-mcp
 ```
 
 Configure your MCP client to use `uvx` with `things-mcp` as the argument.
+
+### Codex
+
+#### Option 1: Add the published server with `uvx`
+
+```bash
+codex mcp add things -- uvx things-mcp
+```
+
+To verify it was added:
+
+```bash
+codex mcp list
+```
+
+#### Option 2: Add it directly in `~/.codex/config.toml`
+
+```toml
+[mcp_servers.things]
+command = "uvx"
+args = ["things-mcp"]
+```
+
+#### Option 3: Run from a local checkout during development
+
+If you want Codex to use this repo directly instead of the published package:
+
+```toml
+[mcp_servers.things]
+command = "uv"
+args = ["run", "--directory", "/absolute/path/to/things-mcp", "things-mcp"]
+```
+
+After updating Codex config, restart Codex and ask something like:
+
+- "What's in my Things inbox?"
+- "Show me my upcoming tasks."
 
 ### Claude Desktop
 
@@ -83,7 +120,7 @@ claude mcp add-json -s user things '{"command":"uvx","args":["things-mcp"]}'
 
 After installation:
 - If using Claude Desktop, you should see "Things MCP" in the "Search and tools" list
-- Try asking: "What's in my Things inbox?"
+- In any client, try asking: "What's in my Things inbox?"
 
 ### Sample Usage with Claude Desktop
 * "What's on my todo list today?"
